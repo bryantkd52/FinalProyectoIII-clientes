@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OptiWeb - Gestión de Clientes</title>
+    <style>
+        /* Estilos generales */
+        :root {
+            --color-primario: #2C3E50;
+            --color-secundario: #3498DB;
+            --color-acento: #E74C3C;
+            --color-texto: #333333;
+            --color-fondo: #F9F9F9;
+            --color-blanco: #FFFFFF;
+            --color-sombra: rgba(0, 0, 0, 0.1);
+            --color-borde: #e0e0e0;
+            --color-exito: #2ecc71;
+            --color-alerta: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
+            line-height: 1.6;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+        
+        /* Header */
+        header {
+            background-color: var(--color-blanco);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px var(--color-sombra);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--color-primario);
+            text-decoration: none;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            color: var(--color-primario);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--color-secundario);
+        }
+        
+        .btn-login {
+            background-color: var(--color-secundario);
+            color: var(--color-blanco);
+            padding: 8px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 40px 0;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .page-title {
+            font-size: 32px;
+            color: var(--color-primario);
+            margin-bottom: 5px;
+        }
+        
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--color-primario);
+            opacity: 0.8;
+            width: 100%;
+        }
+        
+        /* Search Bar */
+        .search-bar {
+            background-color: var(--color-blanco);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--color-sombra);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--color-borde);
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-secundario);
+        }
+        
+        /* Botones */
+        .btn {
+            display: inline-block;
+            background-color: var(--color-secundario);
+            color: var(--color-blanco);
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background-color: var(--color-acento);
+        }
+        
+        .btn:hover {
+            background-color: #2980B9;
+        }
+        
+        .btn-primary:hover {
+            background-color: #C0392B;
+        }
+        
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            background-color: var(--color-blanco);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--color-sombra);
+            margin-bottom: 40px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-borde);
+        }
+        
+        th {
+            background-color: var(--color-primario);
+            color: var(--color-blanco);
+            font-weight: 500;
+        }
+        
+        tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .btn-action {
+            padding: 6px 12px;
+            margin: 0 3px;
+            border-radius: 4px;
+            font-size: 14px;
+            min-width: 70px;
+        }
+        
+        .btn-view {
+            background-color: var(--color-secundario);
+        }
+        
+        .btn-edit {
+            background-color: var(--color-alerta);
+        }
+        
+        .btn-delete {
+            background-color: var(--color-acento);
+        }
+        
+        .btn-action:hover {
+            opacity: 0.9;
+        }
+        
+        /* Chat Button */
+        .chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--color-acento);
+            color: var(--color-blanco);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, background-color 0.3s;
+            z-index: 99;
+        }
+        
+        .chat-button:hover {
+            background-color: #C0392B;
+            transform: scale(1.1);
+        }
+        
+        .chat-button::after {
+            content: "¿Necesitas ayuda?";
+            position: absolute;
+            right: 70px;
+            white-space: nowrap;
+            background-color: var(--color-primario);
+            color: var(--color-blanco);
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        
+        .chat-button:hover::after {
+            opacity: 1;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--color-primario);
+            color: var(--color-blanco);
+            padding: 30px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        .footer-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 10px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-input {
+                width: 100%;
+            }
+            
+            .chat-button {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            th, td {
+                padding: 10px 8px;
+                font-size: 14px;
+            }
+            
+            .btn-action {
+                padding: 4px 8px;
+                margin: 2px;
+                font-size: 12px;
+                min-width: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">OptiWeb</a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="index.html#porque">¿Por qué OptiWeb?</a></li>
+                    <li><a href="index.html#prueba">Prueba Gratis</a></li>
+                    <li><a href="index.html#login" class="btn-login">Iniciar sesión</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Gestión de Clientes</h1>
+                    <p class="page-subtitle">Administra el historial y los datos de tus clientes</p>
+                </div>
+                <button class="btn btn-primary">Agregar nuevo cliente</button>
+            </div>
+            
+            <!-- Barra de búsqueda -->
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Buscar cliente por nombre o correo">
+                <button class="btn">Buscar</button>
+            </div>
+            
+            <!-- Tabla de clientes -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre del cliente</th>
+                            <th>Correo electrónico</th>
+                            <th>Teléfono</th>
+                            <th>Total de compras</th>
+                            <th>Última compra</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>María González</td>
+                            <td>maria.gonzalez@ejemplo.com</td>
+                            <td>555-123-4567</td>
+                            <td>$12,450.00</td>
+                            <td>15/05/2023</td>
+                            <td>
+                                <button class="btn btn-action btn-view">Ver</button>
+                                <button class="btn btn-action btn-edit">Editar</button>
+                                <button class="btn btn-action btn-delete">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Carlos Mendoza</td>
+                            <td>carlos.mendoza@empresa.com</td>
+                            <td>555-987-6543</td>
+                            <td>$8,720.50</td>
+                            <td>10/05/2023</td>
+                            <td>
+                                <button class="btn btn-action btn-view">Ver</button>
+                                <button class="btn btn-action btn-edit">Editar</button>
+                                <button class="btn btn-action btn-delete">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Laura Ramírez</td>
+                            <td>laura.ramirez@correo.com</td>
+                            <td>555-456-7890</td>
+                            <td>$5,300.00</td>
+                            <td>22/05/2023</td>
+                            <td>
+                                <button class="btn btn-action btn-view">Ver</button>
+                                <button class="btn btn-action btn-edit">Editar</button>
+                                <button class="btn btn-action btn-delete">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Javier Torres</td>
+                            <td>javier.torres@negocio.com</td>
+                            <td>555-654-3210</td>
+                            <td>$3,150.75</td>
+                            <td>18/05/2023</td>
+                            <td>
+                                <button class="btn btn-action btn-view">Ver</button>
+                                <button class="btn btn-action btn-edit">Editar</button>
+                                <button class="btn btn-action btn-delete">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">OptiWeb</div>
+            <p>&copy; 2023 OptiWeb. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Chat Button -->
+    <button class="chat-button" aria-label="Abrir chat de ayuda">💬</button>
+</body>
+</html>
